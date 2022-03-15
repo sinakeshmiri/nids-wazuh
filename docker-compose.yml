@@ -1,0 +1,11 @@
+# Wazuh App Copyright (C) 2021 Wazuh Inc. (License GPLv2)
+version: '3.7'
+services:
+  zeek:
+    image: zeek:customeV5
+    hostname: zeek
+    restart: always
+    network_mode: host
+    command: -i eno1 /usr/local/zeek/share/zeek/site/local.zeek
+    volumes:
+      - /var/log/zeek:/pcap
