@@ -5,9 +5,9 @@ services:
     hostname: zeek
     restart: always
     network_mode: host
-    command: -i enp2s0 /usr/local/zeek/share/zeek/site/local.zeek
+    command: -i ${IF} /usr/local/zeek/share/zeek/site/local.zeek
     volumes:
-      - ./zeek-logs:/pcap
+      - /var/log/zeek:/pcap
     cap_add:
       - NET_ADMIN
       - SYS_NICE
@@ -18,11 +18,12 @@ services:
     restart: always
     network_mode: host
     volumes:
-      - ./suricata-logs:/var/log/suricata
-      - ./suricata-rules:/etc/suricata
+      - /var/log/suricata:/var/log/suricata
+      - ./files/rules:/etc/suricata/rules
+      - ./files/suricata.yaml:/etc/suricata/suricata.yaml
     cap_add:
       - NET_ADMIN
       - SYS_NICE
       - NET_RAW 
     command:
-      -  /usr/bin/suricata -i enp2s0
+      -  /usr/bin/suricata -c /etc/suricata/suricata.yaml -s /etc/suricata/rules/*.rules -i ${IF}
